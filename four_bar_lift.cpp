@@ -330,6 +330,6 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees)
     stop();
 }
 
-int main {
+int main() {
     return 0;
 }
