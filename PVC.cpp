@@ -13,17 +13,14 @@ const float FRONT_RIGHT_MULTIPLIER = 1;
 const float BACK_LEFT_MULTIPLIER = 0.95;
 const float BACK_RIGHT_MULTIPLIER = 0.912;
 
-const int ENTREE_CLAW_PIN = 1;
-const int BOTTLE_ARM_PIN = 2;
-const int BOTTLE_CLAW_PIN = 3;
+const int PVC_ARM = 1;
+const int PVC_WRIST = 2;
 
-const int ENTREE_CLAW_OPEN_VALUE = 550;
-const int ENTREE_CLAW_CLOSE_VALUE = 945;
-const int BOTTLE_ARM_RAISE_VALUE = 1600;
-const int BOTTLE_ARM_LOWER_VALUE = 2017;
-const int BOTTLE_ARM_STOW_VALUE = 550;
-const int BOTTLE_CLAW_OPEN_VALUE = 1200;
-const int BOTTLE_CLAW_CLOSE_VALUE = 1610;
+const int PVC_ARM_RAISE_VALUE = 1540;
+const int PVC_ARM_LOWER_VALUE = 413; // TENTATIVE, WE DONT HAVE WHEELS YET SO THIS COULD CHANGE
+const int PVC_ARM_STOW_VALUE = 413;  // TENTATIVE, WE DONT HAVE WHEELS YET SO THIS COULD CHANGE
+const int PVC_WRIST_DROP_VALUE = 1409;
+const int PVC_WRIST_PICKUP_VALUE = 305;
 
 const int ENTREE_TOUCH_SENSOR = 0;
 
@@ -186,32 +183,34 @@ void slowly_set_servo_position(int pin, int position, int wait_delay_ms = 10)
     }
 }
 
-/*
-void turn_wrist_inward() {
-    enable_servo(whatever_pin);
-    slowly_set_servo_position(whatever_pin, whatever_value);
-    disable_servo(whatever_pin);
+void turn_wrist_drop()
+{
+    enable_servo(PVC_WRIST);
+    slowly_set_servo_position(PVC_WRIST, PVC_WRIST_DROP_VALUE);
+    disable_servo(PVC_WRIST);
 }
 
-void turn_wrist_outward() {
-    enable_servo(whatever_pin);
-    slowly_set_servo_position(whatever_pin, whatever_value);
-    disable_servo(whatever_pin);
+void turn_wrist_pickup()
+{
+    enable_servo(PVC_WRIST);
+    slowly_set_servo_position(PVC_WRIST, PVC_WRIST_PICKUP_VALUE);
+    disable_servo(PVC_WRIST);
 }
 
-void set_arm_up() {
-    enable_servo(whatever_pin);
-    slowly_set_servo_position(whatever_pin, whatever_value);
-    disable_servo(whatever_pin);
+void set_arm_up()
+{
+    enable_servo(PVC_ARM);
+    slowly_set_servo_position(PVC_ARM, PVC_ARM_RAISE_VALUE);
+    disable_servo(PVC_ARM);
 }
 
-void set_arm_down() {
-    enable_servo(whatever_pin);
-    slowly_set_servo_position(whatever_pin, whatever_value);
-    disable_servo(whatever_pin);
+void set_arm_down()
+{
+    enable_servo(PVC_ARM);
+    slowly_set_servo_position(PVC_ARM, PVC_ARM_LOWER_VALUE);
+    disable_servo(PVC_ARM);
 }
 
-*/
 bool is_fl_tophat_black()
 {
     return analog(TOPHAT_FRONT_LEFT) > TOPHAT_FRONT_LEFT_THRESHOLD;
