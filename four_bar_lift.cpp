@@ -330,6 +330,17 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees)
     stop();
 }
 
-int main() {
+int main()
+{
+    /* PSUEDOCODE FOR FOUR BAR LIFT: values and robot design aren't done yet
+    lower_arm();
+    pick up object with claw()
+    turn(C-clockwise 180)
+    move(foward till the colored cubes)
+    turn(clockwise 90)
+    move(forward till the raised platform)
+    turn(counter-clockwise 90)
+
+    */
     return 0;
 }
