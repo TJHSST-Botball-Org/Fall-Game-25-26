@@ -4,8 +4,8 @@
 bool is_arm_down = false;
 
 // PORTS
-const int ARM_PORT = 0;
-const int CLAW_PORT = 3;
+const int ARM_PORT = 1;
+const int CLAW_PORT = 0;
 const int LEFT_MOTOR_PORT = 3;
 const int RIGHT_MOTOR_PORT = 0;
 const int LEFT_TOPHAT_PORT = 2;
@@ -14,12 +14,13 @@ const int LEFT_TOPHAT_THRESHOLD = 3900;
 const int RIGHT_TOPHAT_THRESHOLD = 3900;
 
 // POSITIONS
-const int RAISED_POSITION = 1351; // FIX THE NUMBER
+const int RAISED_POSITION_UPPER = 930; // FIX THE NUMBER
+const int RAISED_POSITION_LOWER = 270;
 const int FULLY_RAISED = 300;
 const int HALF_LOWERED = 1770;
-const int LOWERED_POSITION = 2020; // FIX THE NUMBER
-const int CLOSED_POSITION = 800;   // FIX THE NUMBER
-const int OPEN_POSITION = 2047;    // FIX THE NUMBER
+const int LOWERED_POSITION = 0; // FIX THE NUMBER
+const int CLOSED_POSITION = 676;   // FIX THE NUMBER
+const int OPEN_POSITION = 1300;    // FIX THE NUMBER
 
 // WHEEL ADJUSTMENTS
 
@@ -333,7 +334,7 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees)
 int main()
 {
     /* PSUEDOCODE FOR FOUR BAR LIFT: values and robot design aren't done yet
-    lower_arm();
+    
     pick up object with claw()
     turn(C-clockwise 180)
     move(foward till the colored cubes)
@@ -342,5 +343,27 @@ int main()
     turn(counter-clockwise 90)
 
     */
+    turn(1, 5, 90);
+    half_lower_arm();
+    close_claw();
+    raise_arm();
+    turn(1, 5, 180);
+    lower_arm();
+    open_claw();
+    close_claw();
+    raise_arm();
+    turn(1, 5, 90);
+    move_linear(10, 5);
+    turn(-1, 5, 180);
+    move_linear(5, 5);
+    open_claw();
+    lower_arm();
+    close_claw();
+    raise_arm();
+
+
+
+
+
     return 0;
 }
