@@ -6,32 +6,35 @@ bool is_arm_down = false;
 // PORTS
 const int ARM_PORT = 1;
 const int CLAW_PORT = 0;
-const int LEFT_MOTOR_PORT = 3;
-const int RIGHT_MOTOR_PORT = 0;
+const int LEFT_MOTOR_PORT = 0;
+const int RIGHT_MOTOR_PORT = 3;
 const int LEFT_TOPHAT_PORT = 2;
 const int RIGHT_TOPHAT_PORT = 0;
 const int LEFT_TOPHAT_THRESHOLD = 3900;
 const int RIGHT_TOPHAT_THRESHOLD = 3900;
 
 // POSITIONS
-const int RAISED_POSITION_UPPER = 930; // FIX THE NUMBER
+const int RAISED_POSITION_UPPER = 1000; 
 const int RAISED_POSITION_LOWER = 270;
+const int RAISED_POSITION_UPPER_CUBES = 240;
 const int FULLY_RAISED = 300;
-const int HALF_LOWERED = 1770;
-const int LOWERED_POSITION = 0; // FIX THE NUMBER
-const int CLOSED_POSITION = 676;   // FIX THE NUMBER
-const int OPEN_POSITION = 1300;    // FIX THE NUMBER
+const int HALF_LOWERED = 240;
+const int LOWERED_POSITION = 0; 
+const int CLOSED_POSITION = 560;   
+const int OPEN_POSITION = 955;    
 
 // WHEEL ADJUSTMENTS
 
 // Making it go straight:
-const float FORWARD_RIGHT_WHEEL_ADJUSTMENT = 1.032; // Veering to left? Pull right side back, decrease value
+const float FORWARD_RIGHT_WHEEL_ADJUSTMENT = 1.28; // Veering to left? Pull right side back, decrease value
                                                     // Veering to right? Push right side forward, increase value
 
+const float FORWARD_LEFT_WHEEL_ADJUSTMENT = 0.75;
 const float ARM_DOWN_FORWARD_RIGHT_WHEEL_ADJUSTMENT = 1.01;
 
-const float BACKWARD_RIGHT_WHEEL_ADJUSTMENT = 0.9735; // Veering to left? Pull right side back, decrease value
+const float BACKWARD_RIGHT_WHEEL_ADJUSTMENT = 0.83;// Veering to left? Pull right side back, decrease value
                                                       // Veering to right? Push right side forward, increase value
+const float BACKWARD_LEFT_WHEEL_ADJUSTMENT = 1.25;
 
 const float ARM_DOWN_BACKWARD_RIGHT_WHEEL_ADJUSTMENT = 0.9635;
 
@@ -55,10 +58,10 @@ const float ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT = 0.119992171; // Make robot m
 
 // Making it turn the right amount
 // Make the robot turn 90 degrees. Adjust values accordingly
-const float CLOCKWISE_TURNING_ADJUSTMENT = 0.64; // Turn too much --> decrease value
+const float CLOCKWISE_TURNING_ADJUSTMENT = 0.8; // Turn too much --> decrease value
                                                  // Turn too little --> decrease value
 
-const float COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.65; // Turn too much --> decrease value
+const float COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.82; // Turn too much --> decrease value
                                                          // Turn too little --> decrease value
 
 // Making it turn the right amount
@@ -82,28 +85,28 @@ void slowly_set_servo_position(int pin, int position, int wait_delay_ms = 10)
     }
 }
 
-void raise_arm()
+void upper_raise_arm()
 {
     is_arm_down = false;
-    slowly_set_servo_position(ARM_PORT, RAISED_POSITION);
+    slowly_set_servo_position(ARM_PORT, RAISED_POSITION_UPPER);
 }
 
-void fully_raise_arm()
+void upper_cubes_raise_arm()
 {
     is_arm_down = false;
-    slowly_set_servo_position(ARM_PORT, FULLY_RAISED);
+    slowly_set_servo_position(ARM_PORT, RAISED_POSITION_UPPER_CUBES);
 }
 
-void half_lower_arm()
+void lower_raised_arm()
 {
     is_arm_down = false;
-    slowly_set_servo_position(ARM_PORT, HALF_LOWERED);
+    slowly_set_servo_position(ARM_PORT, RAISED_POSITION_LOWER);
 }
 
 void lower_arm()
 {
-    is_arm_down = true;
     slowly_set_servo_position(ARM_PORT, LOWERED_POSITION);
+    is_arm_down = true;
 }
 
 void close_claw()
@@ -145,6 +148,7 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec)
     cmpc(RIGHT_MOTOR_PORT);
 
     float adj;
+    float left;
 
     int direction = distance_in_inches < 0 ? -1 : 1;
     if (direction == 1)
@@ -152,6 +156,7 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec)
         if (!is_arm_down)
         {
             adj = FORWARD_RIGHT_WHEEL_ADJUSTMENT;
+            left = FORWARD_LEFT_WHEEL_ADJUSTMENT;
         }
         else
         {
@@ -163,6 +168,7 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec)
         if (!is_arm_down)
         {
             adj = BACKWARD_RIGHT_WHEEL_ADJUSTMENT;
+            left = BACKWARD_LEFT_WHEEL_ADJUSTMENT;
         }
         else
         {
@@ -171,12 +177,12 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec)
     }
 
     move_at_velocity(
-        LEFT_MOTOR_PORT,
-        1300 * (speed_in_inches_per_sec / 5) * direction);
-
-    move_at_velocity(
         RIGHT_MOTOR_PORT,
         1300 * (speed_in_inches_per_sec / 5) * adj * direction);
+
+    move_at_velocity(
+        LEFT_MOTOR_PORT,
+        1300 * (speed_in_inches_per_sec / 5) * left * direction);
 
     if (direction == 1)
         msleep(1300 * abs(distance_in_inches) * (is_arm_down ? ARM_DOWN_FORWARD_DISTANCE_ADJUSTMENT : FORWARD_DISTANCE_ADJUSTMENT));
@@ -333,36 +339,21 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees)
 
 int main()
 {
-    /* PSUEDOCODE FOR FOUR BAR LIFT: values and robot design aren't done yet
+
     
-    pick up object with claw()
-    turn(C-clockwise 180)
-    move(foward till the colored cubes)
-    turn(clockwise 90)
-    move(forward till the raised platform)
-    turn(counter-clockwise 90)
-
-    */
-    turn(1, 5, 90);
-    half_lower_arm();
-    close_claw();
-    raise_arm();
-    turn(1, 5, 180);
-    lower_arm();
+	upper_raise_arm();
     open_claw();
-    close_claw();
-    raise_arm();
-    turn(1, 5, 90);
-    move_linear(10, 5);
-    turn(-1, 5, 180);
-    move_linear(5, 5);
-    open_claw();
+    
+    move_linear(15, 6.5);
+    turn(-1, 4, 85);
+    move_linear(8, 6.5);
+    turn(-1, 4, 85);
     lower_arm();
+    move_linear(2, 6.5);
     close_claw();
-    raise_arm();
-
-
-
+    upper_raise_arm();
+ 	turn(1,4,82);
+    //move_linear(30,6.5);
 
 
     return 0;
