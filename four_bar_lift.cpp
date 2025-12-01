@@ -353,7 +353,21 @@ int main()
     close_claw();
     upper_raise_arm();
  	turn(1,4,82);
-    //move_linear(30,6.5);
+    move_linear(30,6.5);
+    turn(1, 4, 82);
+    move_linear(10,6.5);
+    turn(-1, 4, 82);
+    move_linear(5,6.5);
+    lower_arm();
+    open_claw();
+    move_linear(-5,6.5);
+    turn(-1,4,85);
+    move_linear(10,6.5);
+    close_claw();
+    move_linear(-10,6.5);
+    turn(1,4,85);
+    move_linear(10, 6.5);
+    open_claw();
 
 
     return 0;
