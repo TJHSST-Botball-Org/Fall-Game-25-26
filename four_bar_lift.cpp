@@ -21,12 +21,12 @@ const int FULLY_RAISED = 300;
 const int HALF_LOWERED = 240;
 const int LOWERED_POSITION = 0; 
 const int CLOSED_POSITION = 560;   
-const int OPEN_POSITION = 955;    
+const int OPEN_POSITION = 1000;    
 
 // WHEEL ADJUSTMENTS
 
 // Making it go straight:
-const float FORWARD_RIGHT_WHEEL_ADJUSTMENT = 1.28; // Veering to left? Pull right side back, decrease value
+const float FORWARD_RIGHT_WHEEL_ADJUSTMENT = 0.835; // Veering to left? Pull right side back, decrease value
                                                     // Veering to right? Push right side forward, increase value
 
 const float FORWARD_LEFT_WHEEL_ADJUSTMENT = 0.75;
@@ -58,11 +58,11 @@ const float ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT = 0.119992171; // Make robot m
 
 // Making it turn the right amount
 // Make the robot turn 90 degrees. Adjust values accordingly
-const float CLOCKWISE_TURNING_ADJUSTMENT = 0.8; // Turn too much --> decrease value
-                                                 // Turn too little --> decrease value
+const float CLOCKWISE_TURNING_ADJUSTMENT = 0.95; // Turn too much --> decrease value
+                                                 // Turn too little --> increase value
 
-const float COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.82; // Turn too much --> decrease value
-                                                         // Turn too little --> decrease value
+const float COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.955; // Turn too much --> decrease value
+                                                         // Turn too little --> increase value
 
 // Making it turn the right amount
 // Make the robot turn 90 degrees. Adjust values accordingly
@@ -339,35 +339,19 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees)
 
 int main()
 {
-
-    
+	enable_servos();
 	upper_raise_arm();
     open_claw();
-    
     move_linear(15, 6.5);
-    turn(-1, 4, 85);
-    move_linear(8, 6.5);
-    turn(-1, 4, 85);
+    turn(-1, 3, 132);
+    move_linear(9, 6.5);
+    turn(-1, 3, 120);
     lower_arm();
     move_linear(2, 6.5);
     close_claw();
     upper_raise_arm();
- 	turn(1,4,82);
+ 	turn(1,3,122);
     move_linear(30,6.5);
-    turn(1, 4, 82);
-    move_linear(10,6.5);
-    turn(-1, 4, 82);
-    move_linear(5,6.5);
-    lower_arm();
-    open_claw();
-    move_linear(-5,6.5);
-    turn(-1,4,85);
-    move_linear(10,6.5);
-    close_claw();
-    move_linear(-10,6.5);
-    turn(1,4,85);
-    move_linear(10, 6.5);
-    open_claw();
 
 
     return 0;
